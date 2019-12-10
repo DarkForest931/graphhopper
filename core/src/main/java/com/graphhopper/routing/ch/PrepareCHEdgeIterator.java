@@ -21,7 +21,6 @@ package com.graphhopper.routing.ch;
 import com.graphhopper.routing.weighting.Weighting;
 import com.graphhopper.util.CHEdgeExplorer;
 import com.graphhopper.util.CHEdgeIterator;
-import com.graphhopper.util.EdgeIterator;
 
 public class PrepareCHEdgeIterator implements PrepareCHEdgeExplorer {
     private final CHEdgeExplorer edgeExplorer;
@@ -71,7 +70,7 @@ public class PrepareCHEdgeIterator implements PrepareCHEdgeExplorer {
         if (isShortcut()) {
             return iter().getWeight();
         } else {
-            return weighting.calcWeight(iter(), reverse, EdgeIterator.NO_EDGE);
+            return weighting.calcEdgeWeight(iter(), reverse);
         }
     }
 

@@ -25,7 +25,10 @@ import com.graphhopper.routing.util.spatialrules.DefaultSpatialRule;
 import com.graphhopper.routing.util.spatialrules.SpatialRule;
 import com.graphhopper.routing.util.spatialrules.SpatialRuleLookup;
 import com.graphhopper.routing.weighting.FastestWeighting;
-import com.graphhopper.storage.*;
+import com.graphhopper.storage.DataAccess;
+import com.graphhopper.storage.Directory;
+import com.graphhopper.storage.GraphHopperStorage;
+import com.graphhopper.storage.RAMDirectory;
 import com.graphhopper.util.EdgeIteratorState;
 import com.graphhopper.util.GHUtility;
 import com.graphhopper.util.shapes.BBox;
@@ -67,7 +70,7 @@ public class LandmarkStorageTest {
         EdgeIteratorState edge = ghStorage.edge(0, 1);
         int res = new LandmarkStorage(ghStorage, dir, new FastestWeighting(encoder) {
             @Override
-            public double calcWeight(EdgeIteratorState edgeState, boolean reverse, int prevOrNextEdgeId) {
+            public double calcEdgeWeight(EdgeIteratorState edgeState, boolean reverse) {
                 return Integer.MAX_VALUE * 2L;
             }
         }, 8).setMaximumWeight(LandmarkStorage.PRECISION).calcWeight(edge, false);
@@ -76,7 +79,7 @@ public class LandmarkStorageTest {
         dir = new RAMDirectory();
         res = new LandmarkStorage(ghStorage, dir, new FastestWeighting(encoder) {
             @Override
-            public double calcWeight(EdgeIteratorState edgeState, boolean reverse, int prevOrNextEdgeId) {
+            public double calcEdgeWeight(EdgeIteratorState edgeState, boolean reverse) {
                 return Double.POSITIVE_INFINITY;
             }
         }, 8).setMaximumWeight(LandmarkStorage.PRECISION).calcWeight(edge, false);

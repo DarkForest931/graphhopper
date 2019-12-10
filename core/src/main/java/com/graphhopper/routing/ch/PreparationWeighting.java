@@ -44,20 +44,30 @@ public class PreparationWeighting implements Weighting {
 
     @Override
     public double calcWeight(EdgeIteratorState edgeState, boolean reverse, int prevOrNextEdgeId) {
+        return calcEdgeWeight(edgeState, reverse);
+    }
+
+    @Override
+    public double calcEdgeWeight(EdgeIteratorState edgeState, boolean reverse) {
         CHEdgeIteratorState tmp = (CHEdgeIteratorState) edgeState;
         if (tmp.isShortcut())
             // if a shortcut is in both directions the weight is identical => no need for 'reverse'
             return tmp.getWeight();
 
-        return userWeighting.calcWeight(edgeState, reverse, prevOrNextEdgeId);
+        return userWeighting.calcEdgeWeight(edgeState, reverse);
     }
 
     @Override
     public long calcMillis(EdgeIteratorState edgeState, boolean reverse, int prevOrNextEdgeId) {
+        return calcEdgeMillis(edgeState, reverse);
+    }
+
+    @Override
+    public long calcEdgeMillis(EdgeIteratorState edgeState, boolean reverse) {
         if (edgeState instanceof CHEdgeIteratorState && ((CHEdgeIteratorState) edgeState).isShortcut()) {
             throw new IllegalStateException("calcMillis should only be called on original edges");
         }
-        return userWeighting.calcMillis(edgeState, reverse, prevOrNextEdgeId);
+        return userWeighting.calcEdgeMillis(edgeState, reverse);
     }
 
     @Override

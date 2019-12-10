@@ -810,6 +810,8 @@ public abstract class AbstractRoutingAlgorithmTester {
     public void testTwoWeightsPerEdge2() {
         // other direction should be different!
         Weighting fakeWeighting = new Weighting() {
+            private final Weighting tmpW = new FastestWeighting(carEncoder);
+
             @Override
             public FlagEncoder getFlagEncoder() {
                 return carEncoder;
@@ -822,6 +824,11 @@ public abstract class AbstractRoutingAlgorithmTester {
 
             @Override
             public double calcWeight(EdgeIteratorState edgeState, boolean reverse, int prevOrNextEdgeId) {
+                return calcEdgeWeight(edgeState, reverse);
+            }
+
+            @Override
+            public double calcEdgeWeight(EdgeIteratorState edgeState, boolean reverse) {
                 int adj = edgeState.getAdjNode();
                 int base = edgeState.getBaseNode();
                 if (reverse) {
@@ -841,7 +848,11 @@ public abstract class AbstractRoutingAlgorithmTester {
                 return edgeState.getDistance() * 0.8;
             }
 
-            private final Weighting tmpW = new FastestWeighting(carEncoder);
+
+            @Override
+            public long calcEdgeMillis(EdgeIteratorState edgeState, boolean reverse) {
+                return tmpW.calcEdgeMillis(edgeState, reverse);
+            }
 
             @Override
             public long calcMillis(EdgeIteratorState edgeState, boolean reverse, int prevOrNextEdgeId) {
