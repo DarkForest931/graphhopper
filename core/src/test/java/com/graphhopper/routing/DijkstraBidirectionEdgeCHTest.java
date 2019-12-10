@@ -28,7 +28,7 @@ import com.graphhopper.storage.GraphHopperStorage;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.graphhopper.routing.weighting.TurnWeighting.INFINITE_U_TURN_COSTS;
+import static com.graphhopper.routing.weighting.Weighting.INFINITE_U_TURN_COSTS;
 
 public class DijkstraBidirectionEdgeCHTest extends AbstractRoutingAlgorithmTester {
     @Override

@@ -30,7 +30,7 @@ import com.graphhopper.util.Parameters;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.graphhopper.routing.weighting.TurnWeighting.INFINITE_U_TURN_COSTS;
+import static com.graphhopper.routing.weighting.Weighting.INFINITE_U_TURN_COSTS;
 
 public class AStarBidirectionEdgeCHTest extends AbstractRoutingAlgorithmTester {
     @Override
