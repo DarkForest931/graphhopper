@@ -35,7 +35,7 @@ import static com.graphhopper.routing.util.EncodingManager.getKey;
  * @author Karl Hübner
  * @author Peter Karich
  */
-public class TurnWeighting implements Weighting {
+public class TurnWeighting implements Weighting, TurnCostProvider {
     private final DecimalEncodedValue turnCostEnc;
     private final TurnCostStorage turnCostStorage;
     private final Weighting superWeighting;
