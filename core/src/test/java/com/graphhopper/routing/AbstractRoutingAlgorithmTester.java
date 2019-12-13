@@ -860,6 +860,11 @@ public abstract class AbstractRoutingAlgorithmTester {
             }
 
             @Override
+            public double calcTurnWeight(int inEdge, int viaNode, int outEdge) {
+                return tmpW.calcTurnWeight(inEdge, viaNode, outEdge);
+            }
+
+            @Override
             public boolean matches(HintsMap map) {
                 throw new UnsupportedOperationException("Not supported");
             }

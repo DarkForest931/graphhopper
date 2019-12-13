@@ -36,6 +36,11 @@ public class BlockAreaWeighting extends AbstractAdjustedWeighting {
     }
 
     @Override
+    public double calcTurnWeight(int inEdge, int viaNode, int outEdge) {
+        return superWeighting.calcTurnWeight(inEdge, viaNode, outEdge);
+    }
+
+    @Override
     public String getName() {
         return "block_area";
     }

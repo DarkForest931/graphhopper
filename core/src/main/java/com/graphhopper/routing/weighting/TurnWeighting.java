@@ -116,6 +116,7 @@ public class TurnWeighting implements Weighting {
     /**
      * This method calculates the turn weight separately.
      */
+    @Override
     public double calcTurnWeight(int edgeFrom, int nodeVia, int edgeTo) {
         if (!EdgeIterator.Edge.isValid(edgeFrom) || !EdgeIterator.Edge.isValid(edgeTo)) {
             return 0;

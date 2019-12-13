@@ -65,6 +65,8 @@ public interface Weighting {
      */
     long calcMillis(EdgeIteratorState edgeState, boolean reverse, int prevOrNextEdgeId);
 
+    double calcTurnWeight(int inEdge, int viaNode, int outEdge);
+
     FlagEncoder getFlagEncoder();
 
     String getName();

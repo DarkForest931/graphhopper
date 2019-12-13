@@ -78,6 +78,11 @@ public abstract class AbstractWeighting implements Weighting {
     }
 
     @Override
+    public double calcTurnWeight(int inEdge, int viaNode, int outEdge) {
+        return 0;
+    }
+
+    @Override
     public boolean matches(HintsMap reqMap) {
         return (reqMap.getWeighting().isEmpty() || getName().equals(reqMap.getWeighting())) &&
                 (reqMap.getVehicle().isEmpty() || flagEncoder.toString().equals(reqMap.getVehicle()));
