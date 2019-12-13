@@ -146,7 +146,7 @@ public class EdgeBasedRoutingAlgorithmTest {
     }
 
     private Weighting createWeighting(FlagEncoder encoder, double uTurnCosts) {
-        return new TurnWeighting(new FastestWeighting(encoder), tcs, uTurnCosts);
+        return new FastestWeighting(encoder, new TurnWeighting(encoder, tcs, uTurnCosts));
     }
 
     @Test
@@ -397,7 +397,7 @@ public class EdgeBasedRoutingAlgorithmTest {
         setTurnCost(g, 2, 5, 6, 3);
         setTurnCost(g, 1, 6, 7, 4);
 
-        TurnWeighting weighting = new TurnWeighting(new FastestWeighting(carEncoder), tcs) {
+        FastestWeighting weighting = new FastestWeighting(carEncoder, new TurnWeighting(carEncoder, tcs) {
             @Override
             public double calcTurnWeight(int edgeFrom, int nodeVia, int edgeTo) {
                 if (edgeFrom >= 0)
@@ -406,7 +406,7 @@ public class EdgeBasedRoutingAlgorithmTest {
                     assertNotNull("edge " + edgeTo + " to " + nodeVia + " does not exist", g.getEdgeIteratorState(edgeTo, nodeVia));
                 return super.calcTurnWeight(edgeFrom, nodeVia, edgeTo);
             }
-        };
+        });
         Path p = createAlgo(g, weighting, EDGE_BASED).calcPath(5, 1);
         assertEquals(IntArrayList.from(5, 6, 7, 4, 3, 1), p.calcNodes());
         assertEquals(5 * 0.06 + 1, p.getWeight(), 1.e-6);

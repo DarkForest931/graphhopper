@@ -38,7 +38,7 @@ import static com.graphhopper.routing.util.EncodingManager.getKey;
 public class TurnWeighting implements Weighting, TurnCostProvider {
     private final DecimalEncodedValue turnCostEnc;
     private final TurnCostStorage turnCostStorage;
-    private final Weighting superWeighting;
+    private Weighting superWeighting;
     private final double uTurnCosts;
     private final IntsRef tcFlags = TurnCost.createFlags();
 
@@ -54,14 +54,21 @@ public class TurnWeighting implements Weighting, TurnCostProvider {
      *                        whether or not turnCostExt contains explicit values for these turns.
      */
     public TurnWeighting(Weighting superWeighting, TurnCostStorage turnCostStorage, double uTurnCosts) {
+        this(superWeighting.getFlagEncoder(), turnCostStorage, uTurnCosts);
+        this.superWeighting = superWeighting;
+    }
+
+    public TurnWeighting(FlagEncoder encoder, TurnCostStorage turnCostStorage) {
+        this(encoder, turnCostStorage, INFINITE_U_TURN_COSTS);
+    }
+
+    public TurnWeighting(FlagEncoder encoder, TurnCostStorage turnCostStorage, double uTurnCosts) {
         if (turnCostStorage == null) {
             throw new RuntimeException("No storage set to calculate turn weight");
         }
-        FlagEncoder encoder = superWeighting.getFlagEncoder();
         String key = getKey(encoder.toString(), EV_SUFFIX);
         // if null the TurnWeighting can be still useful for edge-based routing
         this.turnCostEnc = encoder.hasEncodedValue(key) ? encoder.getDecimalEncodedValue(key) : null;
-        this.superWeighting = superWeighting;
         this.turnCostStorage = turnCostStorage;
         this.uTurnCosts = uTurnCosts < 0 ? Double.POSITIVE_INFINITY : uTurnCosts;
     }

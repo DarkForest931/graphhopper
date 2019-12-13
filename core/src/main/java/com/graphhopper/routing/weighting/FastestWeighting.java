@@ -45,8 +45,20 @@ public class FastestWeighting extends AbstractWeighting {
     // this factor puts a penalty on roads with a "destination"-only access, see #733
     private final double roadAccessPenalty;
 
+    public FastestWeighting(FlagEncoder encoder) {
+        this(encoder, new HintsMap(0));
+    }
+
+    public FastestWeighting(FlagEncoder encoder, TurnCostProvider turnCostProvider) {
+        this(encoder, new HintsMap(0), turnCostProvider);
+    }
+
     public FastestWeighting(FlagEncoder encoder, PMap map) {
-        super(encoder);
+        this(encoder, map, new NoTurnCostProvider());
+    }
+
+    public FastestWeighting(FlagEncoder encoder, PMap map, TurnCostProvider turnCostProvider) {
+        super(encoder, turnCostProvider);
         headingPenalty = map.getDouble(Routing.HEADING_PENALTY, Routing.DEFAULT_HEADING_PENALTY);
         headingPenaltyMillis = Math.round(headingPenalty * 1000);
         maxSpeed = encoder.getMaxSpeed() / SPEED_CONV;
@@ -59,10 +71,6 @@ public class FastestWeighting extends AbstractWeighting {
             roadAccessPenalty = 0;
             roadAccessEnc = null;
         }
-    }
-
-    public FastestWeighting(FlagEncoder encoder) {
-        this(encoder, new HintsMap(0));
     }
 
     @Override

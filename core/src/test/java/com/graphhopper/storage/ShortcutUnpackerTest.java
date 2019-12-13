@@ -322,14 +322,14 @@ public class ShortcutUnpackerTest {
     }
 
     private class TurnWeightingVisitor implements ShortcutUnpacker.Visitor {
-        private final TurnWeighting turnWeighting = new TurnWeighting(weighting, graph.getTurnCostStorage());
+        private final Weighting weighting = new FastestWeighting(encoder, new TurnWeighting(encoder, graph.getTurnCostStorage()));
         private long time = 0;
         private double weight = 0;
 
         @Override
         public void visit(EdgeIteratorState edge, boolean reverse, int prevOrNextEdgeId) {
-            time += turnWeighting.calcMillis(edge, reverse, prevOrNextEdgeId);
-            weight += turnWeighting.calcWeight(edge, reverse, prevOrNextEdgeId);
+            time += weighting.calcMillis(edge, reverse, prevOrNextEdgeId);
+            weight += weighting.calcWeight(edge, reverse, prevOrNextEdgeId);
         }
     }
 }

@@ -18,7 +18,6 @@
 
 package com.graphhopper.routing;
 
-import com.graphhopper.routing.weighting.TurnWeighting;
 import com.graphhopper.routing.weighting.Weighting;
 import com.graphhopper.storage.Graph;
 import com.graphhopper.storage.SPTEntry;
@@ -121,10 +120,9 @@ public class BidirPathExtractor {
         if (!EdgeIterator.Edge.isValid(inEdge) || !EdgeIterator.Edge.isValid(outEdge)) {
             return;
         }
-        if (weighting instanceof TurnWeighting) {
-            double turnWeight = ((TurnWeighting) weighting).calcTurnWeight(inEdge, viaNode, outEdge);
-            path.addTime((long) (turnWeight * 1000));
-        }
+        double turnWeight = weighting.calcTurnWeight(inEdge, viaNode, outEdge);
+        // todonow: use calcTurnMillis instead ?
+        path.addTime((long) (turnWeight * 1000));
     }
 
 }
