@@ -33,7 +33,11 @@ public class CurvatureWeighting extends PriorityWeighting {
     private final DecimalEncodedValue avSpeedEnc;
 
     public CurvatureWeighting(FlagEncoder flagEncoder, PMap pMap) {
-        super(flagEncoder, pMap);
+        this(flagEncoder, pMap, new NoTurnCostProvider());
+    }
+
+    public CurvatureWeighting(FlagEncoder flagEncoder, PMap pMap, TurnCostProvider turnCostProvider) {
+        super(flagEncoder, pMap, turnCostProvider);
 
         priorityEnc = flagEncoder.getDecimalEncodedValue(EncodingManager.getKey(flagEncoder, "priority"));
         curvatureEnc = flagEncoder.getDecimalEncodedValue(EncodingManager.getKey(flagEncoder, "curvature"));

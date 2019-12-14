@@ -36,7 +36,11 @@ public class ShortFastestWeighting extends FastestWeighting {
     private final double timeFactor;
 
     public ShortFastestWeighting(FlagEncoder encoder, PMap map) {
-        super(encoder);
+        this(encoder, map, new NoTurnCostProvider());
+    }
+
+    public ShortFastestWeighting(FlagEncoder encoder, PMap map, TurnCostProvider turnCostProvider) {
+        super(encoder, turnCostProvider);
         timeFactor = checkBounds(TIME_FACTOR, map.getDouble(TIME_FACTOR, 1), 0, 10);
 
         // default value derived from the cost for time e.g. 25€/hour and for distance 0.5€/km

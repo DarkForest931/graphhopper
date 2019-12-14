@@ -55,7 +55,11 @@ public class GenericWeighting extends AbstractWeighting {
     private final DecimalEncodedValue maxWidthEnc;
 
     public GenericWeighting(DataFlagEncoder encoder, PMap hintsMap) {
-        super(encoder);
+        this(encoder, hintsMap, new NoTurnCostProvider());
+    }
+
+    public GenericWeighting(DataFlagEncoder encoder, PMap hintsMap, TurnCostProvider turnCostProvider) {
+        super(encoder, turnCostProvider);
         gEncoder = encoder;
         headingPenalty = hintsMap.getDouble(Routing.HEADING_PENALTY, Routing.DEFAULT_HEADING_PENALTY);
         headingPenaltyMillis = Math.round(headingPenalty * 1000);
