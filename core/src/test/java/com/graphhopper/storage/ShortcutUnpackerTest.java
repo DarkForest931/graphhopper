@@ -8,8 +8,8 @@ import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.routing.util.FlagEncoder;
 import com.graphhopper.routing.util.MotorcycleFlagEncoder;
 import com.graphhopper.routing.util.TraversalMode;
+import com.graphhopper.routing.weighting.DefaultTurnCostProvider;
 import com.graphhopper.routing.weighting.FastestWeighting;
-import com.graphhopper.routing.weighting.TurnWeighting;
 import com.graphhopper.routing.weighting.Weighting;
 import com.graphhopper.util.EdgeIteratorState;
 import org.junit.Assume;
@@ -322,7 +322,7 @@ public class ShortcutUnpackerTest {
     }
 
     private class TurnWeightingVisitor implements ShortcutUnpacker.Visitor {
-        private final Weighting weighting = new FastestWeighting(encoder, new TurnWeighting(encoder, graph.getTurnCostStorage()));
+        private final Weighting weighting = new FastestWeighting(encoder, new DefaultTurnCostProvider(encoder, graph.getTurnCostStorage()));
         private long time = 0;
         private double weight = 0;
 
