@@ -17,7 +17,7 @@
  */
 package com.graphhopper.routing.lm;
 
-import com.graphhopper.routing.AbstractRoutingAlgorithmTester;
+import com.graphhopper.routing.RoutingAlgorithmTest;
 import com.graphhopper.routing.util.CarFlagEncoder;
 import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.routing.util.FlagEncoder;
@@ -191,7 +191,7 @@ public class LandmarkStorageTest {
 
     @Test
     public void testWithBorderBlocking() {
-        AbstractRoutingAlgorithmTester.initBiGraph(ghStorage);
+        RoutingAlgorithmTest.initBiGraph(ghStorage);
 
         LandmarkStorage storage = new LandmarkStorage(ghStorage, new RAMDirectory(), new FastestWeighting(encoder), 2);
         final SpatialRule ruleRight = new DefaultSpatialRule() {
