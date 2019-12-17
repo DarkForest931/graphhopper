@@ -56,6 +56,8 @@ public interface Weighting {
      */
     double calcWeight(EdgeIteratorState edgeState, boolean reverse, int prevOrNextEdgeId);
 
+    double calcTurnWeight(int inEdge, int viaNode, int outEdge);
+
     long calcEdgeMillis(EdgeIteratorState edgeState, boolean reverse);
 
     /**
@@ -65,7 +67,7 @@ public interface Weighting {
      */
     long calcMillis(EdgeIteratorState edgeState, boolean reverse, int prevOrNextEdgeId);
 
-    double calcTurnWeight(int inEdge, int viaNode, int outEdge);
+    long calcTurnMillis(int inEdge, int viaNode, int outEdge);
 
     FlagEncoder getFlagEncoder();
 

@@ -76,6 +76,11 @@ public class PreparationWeighting implements Weighting {
     }
 
     @Override
+    public long calcTurnMillis(int inEdge, int viaNode, int outEdge) {
+        return userWeighting.calcTurnMillis(inEdge, viaNode, outEdge);
+    }
+
+    @Override
     public FlagEncoder getFlagEncoder() {
         return userWeighting.getFlagEncoder();
     }

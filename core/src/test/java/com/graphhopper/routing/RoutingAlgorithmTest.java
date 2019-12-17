@@ -832,6 +832,11 @@ public class RoutingAlgorithmTest {
             }
 
             @Override
+            public long calcTurnMillis(int inEdge, int viaNode, int outEdge) {
+                return tmpW.calcTurnMillis(inEdge, viaNode, outEdge);
+            }
+
+            @Override
             public double calcEdgeWeight(EdgeIteratorState edgeState, boolean reverse) {
                 int adj = edgeState.getAdjNode();
                 int base = edgeState.getBaseNode();

@@ -128,23 +128,24 @@ public class DirectedRoutingTest {
     }
 
     private BidirRoutingAlgorithm createAlgo(Graph graph) {
+        Weighting queryWeighting = createQueryWeighting(graph);
         switch (algo) {
             case ASTAR:
-                return new AStarBidirection(graph, createTurnWeighting(graph), TraversalMode.EDGE_BASED);
+                return new AStarBidirection(graph, queryWeighting, TraversalMode.EDGE_BASED);
             case CH_DIJKSTRA:
-                return (BidirRoutingAlgorithm) pch.getRoutingAlgorithmFactory().createAlgo(graph, AlgorithmOptions.start().weighting(weighting).algorithm(DIJKSTRA_BI).build());
+                return (BidirRoutingAlgorithm) pch.getRoutingAlgorithmFactory().createAlgo(graph, AlgorithmOptions.start().weighting(queryWeighting).algorithm(DIJKSTRA_BI).build());
             case CH_ASTAR:
-                return (BidirRoutingAlgorithm) pch.getRoutingAlgorithmFactory().createAlgo(graph, AlgorithmOptions.start().weighting(weighting).algorithm(ASTAR_BI).build());
+                return (BidirRoutingAlgorithm) pch.getRoutingAlgorithmFactory().createAlgo(graph, AlgorithmOptions.start().weighting(queryWeighting).algorithm(ASTAR_BI).build());
             case LM:
-                AStarBidirection astarbi = new AStarBidirection(graph, createTurnWeighting(graph), TraversalMode.EDGE_BASED);
+                AStarBidirection astarbi = new AStarBidirection(graph, queryWeighting, TraversalMode.EDGE_BASED);
                 return (BidirRoutingAlgorithm) lm.getDecoratedAlgorithm(graph, astarbi, AlgorithmOptions.start().build());
             default:
                 throw new IllegalArgumentException("unknown algo " + algo);
         }
     }
 
-    private TurnWeighting createTurnWeighting(Graph g) {
-        return new TurnWeighting(weighting, g.getTurnCostStorage(), uTurnCosts);
+    private Weighting createQueryWeighting(Graph g) {
+        return new QueryWeighting(weighting, new DefaultTurnCostProvider(weighting.getFlagEncoder(), g.getTurnCostStorage(), uTurnCosts));
     }
 
     @Test
@@ -165,7 +166,7 @@ public class DirectedRoutingTest {
             int sourceOutEdge = getSourceOutEdge(rnd, source, graph);
             int targetInEdge = getTargetInEdge(rnd, target, graph);
 //            System.out.println("source: " + source + ", target: " + target + ", sourceOutEdge: " + sourceOutEdge + ", targetInEdge: " + targetInEdge);
-            Path refPath = new DijkstraBidirectionRef(graph, createTurnWeighting(graph), TraversalMode.EDGE_BASED)
+            Path refPath = new DijkstraBidirectionRef(graph, createQueryWeighting(graph), TraversalMode.EDGE_BASED)
                     .calcPath(source, target, sourceOutEdge, targetInEdge);
             Path path = createAlgo()
                     .calcPath(source, target, sourceOutEdge, targetInEdge);
@@ -221,8 +222,7 @@ public class DirectedRoutingTest {
             int chSourceOutEdge = getSourceOutEdge(tmpRnd2, source, chQueryGraph);
             int chTargetInEdge = getTargetInEdge(tmpRnd2, target, chQueryGraph);
 
-            final TurnWeighting tw = createTurnWeighting(queryGraph);
-            Path refPath = new DijkstraBidirectionRef(queryGraph, tw, TraversalMode.EDGE_BASED)
+            Path refPath = new DijkstraBidirectionRef(queryGraph, createQueryWeighting(queryGraph), TraversalMode.EDGE_BASED)
                     .calcPath(source, target, sourceOutEdge, targetInEdge);
             Path path = createAlgo(chQueryGraph)
                     .calcPath(source, target, chSourceOutEdge, chTargetInEdge);

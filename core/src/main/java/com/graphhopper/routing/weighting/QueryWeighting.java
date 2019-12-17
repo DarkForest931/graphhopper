@@ -15,72 +15,69 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.graphhopper.routing.weighting;
 
 import com.graphhopper.routing.util.FlagEncoder;
 import com.graphhopper.routing.util.HintsMap;
 import com.graphhopper.util.EdgeIteratorState;
 
-/**
- * The AdjustedWeighting wraps another Weighting.
- *
- * @author Robin Boldt
- */
-public abstract class AbstractAdjustedWeighting implements Weighting {
-    protected final Weighting superWeighting;
+public class QueryWeighting implements Weighting {
+    private final Weighting weighting;
+    private final TurnCostProvider turnCostProvider;
 
-    public AbstractAdjustedWeighting(Weighting superWeighting) {
-        if (superWeighting == null)
-            throw new IllegalArgumentException("No super weighting set");
-        this.superWeighting = superWeighting;
+    public QueryWeighting(Weighting weighting, TurnCostProvider turnCostProvider) {
+        this.weighting = weighting;
+        this.turnCostProvider = turnCostProvider;
     }
 
     @Override
     public double getMinWeight(double distance) {
-        return superWeighting.getMinWeight(distance);
+        return weighting.getMinWeight(distance);
+    }
+
+    @Override
+    public double calcEdgeWeight(EdgeIteratorState edgeState, boolean reverse) {
+        return weighting.calcEdgeWeight(edgeState, reverse);
     }
 
     @Override
     public double calcWeight(EdgeIteratorState edgeState, boolean reverse, int prevOrNextEdgeId) {
-        return superWeighting.calcWeight(edgeState, reverse, prevOrNextEdgeId);
-    }
-
-    @Override
-    public long calcMillis(EdgeIteratorState edgeState, boolean reverse, int prevOrNextEdgeId) {
-        return superWeighting.calcMillis(edgeState, reverse, prevOrNextEdgeId);
-    }
-
-    @Override
-    public long calcEdgeMillis(EdgeIteratorState edgeState, boolean reverse) {
-        return superWeighting.calcEdgeMillis(edgeState, reverse);
+        return AbstractWeighting.calcWeightWithTurnWeight(weighting, turnCostProvider, edgeState, reverse, prevOrNextEdgeId);
     }
 
     @Override
     public double calcTurnWeight(int inEdge, int viaNode, int outEdge) {
-        return superWeighting.calcTurnWeight(inEdge, viaNode, outEdge);
+        return turnCostProvider.calcTurnWeight(inEdge, viaNode, outEdge);
+    }
+
+    @Override
+    public long calcEdgeMillis(EdgeIteratorState edgeState, boolean reverse) {
+        return weighting.calcEdgeMillis(edgeState, reverse);
+    }
+
+    @Override
+    public long calcMillis(EdgeIteratorState edgeState, boolean reverse, int prevOrNextEdgeId) {
+        return AbstractWeighting.calcMillisWithTurnMillis(weighting, turnCostProvider, edgeState, reverse, prevOrNextEdgeId);
     }
 
     @Override
     public long calcTurnMillis(int inEdge, int viaNode, int outEdge) {
-        return superWeighting.calcTurnMillis(inEdge, viaNode, outEdge);
+        return turnCostProvider.calcTurnMillis(inEdge, viaNode, outEdge);
     }
 
-    /**
-     * Returns the flagEncoder of the superWeighting. Usually we do not have a FlagEncoder here.
-     */
     @Override
     public FlagEncoder getFlagEncoder() {
-        return superWeighting.getFlagEncoder();
+        return weighting.getFlagEncoder();
     }
 
     @Override
-    public boolean matches(HintsMap reqMap) {
-        return getName().equals(reqMap.getWeighting())
-                && superWeighting.getFlagEncoder().toString().equals(reqMap.getVehicle());
+    public String getName() {
+        return weighting.getName();
     }
 
     @Override
-    public String toString() {
-        return getName() + "|" + superWeighting.toString();
+    public boolean matches(HintsMap map) {
+        return weighting.matches(map);
     }
 }

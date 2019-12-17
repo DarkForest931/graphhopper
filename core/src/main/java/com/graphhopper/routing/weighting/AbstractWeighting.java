@@ -53,7 +53,11 @@ public abstract class AbstractWeighting implements Weighting {
 
     @Override
     public double calcWeight(EdgeIteratorState edgeState, boolean reverse, int prevOrNextEdgeId) {
-        final double edgeWeight = calcEdgeWeight(edgeState, reverse);
+        return calcWeightWithTurnWeight(this, turnCostProvider, edgeState, reverse, prevOrNextEdgeId);
+    }
+
+    public static double calcWeightWithTurnWeight(Weighting weighting, TurnCostProvider turnCostProvider, EdgeIteratorState edgeState, boolean reverse, int prevOrNextEdgeId) {
+        final double edgeWeight = weighting.calcEdgeWeight(edgeState, reverse);
         if (!EdgeIterator.Edge.isValid(prevOrNextEdgeId)) {
             return edgeWeight;
         }
@@ -66,7 +70,11 @@ public abstract class AbstractWeighting implements Weighting {
 
     @Override
     public long calcMillis(EdgeIteratorState edgeState, boolean reverse, int prevOrNextEdgeId) {
-        long edgeMillis = calcEdgeMillis(edgeState, reverse);
+        return calcMillisWithTurnMillis(this, turnCostProvider, edgeState, reverse, prevOrNextEdgeId);
+    }
+
+    public static long calcMillisWithTurnMillis(Weighting weighting, TurnCostProvider turnCostProvider, EdgeIteratorState edgeState, boolean reverse, int prevOrNextEdgeId) {
+        long edgeMillis = weighting.calcEdgeMillis(edgeState, reverse);
         if (!EdgeIterator.Edge.isValid(prevOrNextEdgeId)) {
             return edgeMillis;
         }
@@ -108,6 +116,11 @@ public abstract class AbstractWeighting implements Weighting {
     }
 
     @Override
+    public long calcTurnMillis(int inEdge, int viaNode, int outEdge) {
+        return turnCostProvider.calcTurnMillis(inEdge, viaNode, outEdge);
+    }
+
+    @Override
     public boolean matches(HintsMap reqMap) {
         return (reqMap.getWeighting().isEmpty() || getName().equals(reqMap.getWeighting())) &&
                 (reqMap.getVehicle().isEmpty() || flagEncoder.toString().equals(reqMap.getVehicle()));
@@ -135,7 +148,7 @@ public abstract class AbstractWeighting implements Weighting {
         return toString().equals(other.toString());
     }
 
-    static final boolean isValidName(String name) {
+    static boolean isValidName(String name) {
         if (name == null || name.isEmpty())
             return false;
 
