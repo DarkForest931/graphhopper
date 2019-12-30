@@ -318,7 +318,7 @@ public class NodeBasedNodeContractorTest {
         Dijkstra dikstra = new Dijkstra(graph, weighting, TraversalMode.NODE_BASED);
         Path dijkstraPath = dikstra.calcPath(from, to);
 
-        DijkstraBidirectionCH ch = new DijkstraBidirectionCH(lg, new PreparationWeighting(weighting));
+        DijkstraBidirectionCH ch = new DijkstraBidirectionCH(lg, new CHWeighting(weighting));
         Path chPath = ch.calcPath(from, to);
         assertEquals(dijkstraPath.calcNodes(), chPath.calcNodes());
         assertEquals(dijkstraPath.getDistance(), chPath.getDistance(), 1.e-6);
@@ -367,7 +367,7 @@ public class NodeBasedNodeContractorTest {
         Dijkstra dikstra = new Dijkstra(graph, weighting, TraversalMode.NODE_BASED);
         Path dijkstraPath = dikstra.calcPath(from, to);
 
-        DijkstraBidirectionCH ch = new DijkstraBidirectionCH(lg, new PreparationWeighting(weighting));
+        DijkstraBidirectionCH ch = new DijkstraBidirectionCH(lg, new CHWeighting(weighting));
         Path chPath = ch.calcPath(from, to);
         assertEquals(dijkstraPath.calcNodes(), chPath.calcNodes());
         assertEquals(dijkstraPath.getDistance(), chPath.getDistance(), 1.e-6);
@@ -439,7 +439,7 @@ public class NodeBasedNodeContractorTest {
 
         // without heading
         {
-            DijkstraBidirectionCH ch = new DijkstraBidirectionCH(chQueryGraph, new PreparationWeighting(weighting));
+            DijkstraBidirectionCH ch = new DijkstraBidirectionCH(chQueryGraph, new CHWeighting(weighting));
             Path chPath = ch.calcPath(7, 3);
             assertEquals(IntArrayList.from(7, 2, 3), chPath.calcNodes());
         }
@@ -451,7 +451,7 @@ public class NodeBasedNodeContractorTest {
             assertEquals(IntArrayList.from(7, 0, 1, 6, 5, 2, 3), path.calcNodes());
 
             chQueryGraph.enforceHeading(7, 90, false);
-            DijkstraBidirectionCH ch = new DijkstraBidirectionCH(chQueryGraph, new PreparationWeighting(weighting));
+            DijkstraBidirectionCH ch = new DijkstraBidirectionCH(chQueryGraph, new CHWeighting(weighting));
             Path chPath = ch.calcPath(7, 3);
             // the route takes a u-turn at node 1 and 'skips' the virtual node when going from 0 to 3 (because it takes
             // the shortcut from 1 to 2), which both should not be
