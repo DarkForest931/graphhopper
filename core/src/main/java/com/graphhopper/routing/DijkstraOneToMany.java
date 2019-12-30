@@ -93,7 +93,7 @@ public class DijkstraOneToMany extends AbstractRoutingAlgorithm {
             }
             EdgeIteratorState edgeState = graph.getEdgeIteratorState(edge, node);
             path.addDistance(edgeState.getDistance());
-            // todo: why do we not account for turn times here ?
+            // todo: we do not yet account for turn times here!
             path.addTime(weighting.calcEdgeMillis(edgeState, false));
             path.addEdge(edge);
             node = parents[node];
