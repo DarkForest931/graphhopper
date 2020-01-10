@@ -24,7 +24,6 @@ import com.graphhopper.routing.util.HintsMap;
 import com.graphhopper.util.EdgeIterator;
 import com.graphhopper.util.EdgeIteratorState;
 
-import static com.graphhopper.util.EdgeIterator.NO_EDGE;
 import static com.graphhopper.util.Helper.toLowerCase;
 
 /**
@@ -67,16 +66,6 @@ public abstract class AbstractWeighting implements Weighting {
                 ? turnCostProvider.calcTurnWeight(origEdgeId, edgeState.getBaseNode(), prevOrNextEdgeId)
                 : turnCostProvider.calcTurnWeight(prevOrNextEdgeId, edgeState.getBaseNode(), origEdgeId);
         return edgeWeight + turnWeight;
-    }
-
-    @Override
-    public final double calcEdgeWeight(EdgeIteratorState edgeState, boolean reverse) {
-        return calcWeight(edgeState, reverse, NO_EDGE);
-    }
-
-    @Override
-    public final long calcEdgeMillis(EdgeIteratorState edgeState, boolean reverse) {
-        return calcMillis(edgeState, reverse, NO_EDGE);
     }
 
     @Override

@@ -30,8 +30,6 @@ import com.graphhopper.util.EdgeIteratorState;
 public interface Weighting {
     int INFINITE_U_TURN_COSTS = -1;
 
-    int INFINITE_U_TURN_COSTS = -1;
-
     /**
      * Used only for the heuristic estimation in A*
      *
@@ -43,25 +41,18 @@ public interface Weighting {
     double calcEdgeWeight(EdgeIteratorState edgeState, boolean reverse);
 
     /**
-     * This method calculates the weight of a given {@link EdgeIteratorState}. E.g. a high value indicates that the edge
-     * should be avoided during shortest path search. Make sure that this method is very fast and optimized as this is
-     * called potentially millions of times for one route or a lot more for nearly any preprocessing phase. This
-     * method does not include any turn costs like {@link #calcWeight}.
+     * This method calculates the weighting a certain edgeState should be associated. E.g. a high
+     * value indicates that the edge should be avoided. Make sure that this method is very fast and
+     * optimized as this is called potentially millions of times for one route or a lot more for
+     * nearly any preprocessing phase.
      *
-     * @param edgeState the edge for which the weight should be calculated
-     * @param reverse   if the specified edge is specified in reverse direction e.g. from the reverse
-     *                  case of a bidirectional search.
-     * @return the calculated weight with the specified velocity has to be in the range of 0 and
-     * +Infinity. Make sure your method does not return NaN which can e.g. occur for 0/0.
-     */
-    double calcEdgeWeight(EdgeIteratorState edgeState, boolean reverse);
-
-    /**
-     * Calculates the weight of a given edge like {@link #calcEdgeWeight}, but potentially also adds the transition
-     * cost (the turn weight) associated with transitioning from/to the edge with ID prevOrNextEdgeId.
-     *
+     * @param edgeState        the edge for which the weight should be calculated
+     * @param reverse          if the specified edge is specified in reverse direction e.g. from the reverse
+     *                         case of a bidirectional search.
      * @param prevOrNextEdgeId if reverse is false this has to be the previous edgeId, if true it
      *                         has to be the next edgeId in the direction from start to end.
+     * @return the calculated weight with the specified velocity has to be in the range of 0 and
+     * +Infinity. Make sure your method does not return NaN which can e.g. occur for 0/0.
      */
     double calcWeight(EdgeIteratorState edgeState, boolean reverse, int prevOrNextEdgeId);
 
@@ -70,16 +61,9 @@ public interface Weighting {
     long calcEdgeMillis(EdgeIteratorState edgeState, boolean reverse);
 
     /**
-     * This method calculates the time taken (in milli seconds) to travel along the specified edgeState.
-     * It is typically used for post-processing and on only a few thousand edges.
-     */
-    long calcEdgeMillis(EdgeIteratorState edgeState, boolean reverse);
-
-    /**
-     * Like {@link #calcEdgeMillis}, but potentially also includes the turn costs (in seconds) needed for the transition
-     * between the previous (or next) edgeId and this edge via prevOrNextEdgeId.
-     *
-     * @see #calcWeight
+     * This method calculates the time taken (in milli seconds) for the specified edgeState and
+     * optionally include the turn costs (in seconds) of the previous (or next) edgeId via
+     * prevOrNextEdgeId. Typically used for post-processing and on only a few thousand edges.
      */
     long calcMillis(EdgeIteratorState edgeState, boolean reverse, int prevOrNextEdgeId);
 
