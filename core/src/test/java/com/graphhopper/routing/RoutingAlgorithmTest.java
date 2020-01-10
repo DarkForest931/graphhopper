@@ -58,9 +58,8 @@ import static org.junit.Assert.*;
 /**
  * This test tests the different routing algorithms on small user-defined sample graphs. It tests node- and edge-based
  * algorithms, but does *not* use turn costs, because otherwise node- and edge-based implementations would not be
- * comparable. For edge-based traversal u-turns cannot happen even when the u-turn costs are zero, because because
- * as long as we do not apply turn restrictions we will never take a u-turn.
- * All tests here should follow the same pattern:
+ * comparable. For edge-based traversal u-turns cannot happen even when we are not using a {@link TurnWeighting}, because
+ * as long as we do not apply turn restrictions we will never take a u-turn.. All tests should follow the same pattern:
  * <p>
  * - create a GH storage, you need to pass all the weightings used in this test to {@link #createGHStorage}, such that
  * the according CHGraphs can be created
